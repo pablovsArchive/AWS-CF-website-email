@@ -1,2 +1,2 @@
 # AWS-CF-website-email
-AWS cloudFront template that deploya a website to s3 and a email server
+AWS cloudFront template to deploy a serverless website and email service to s3
