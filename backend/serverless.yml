@@ -1,0 +1,29 @@
+
+
+service: serverless-email
+
+plugins:
+    - serverless-python-requirements
+    - serverless-iam-roles-per-function
+provider:
+  name: aws
+  runtime: python3.7
+  region: eu-west-1
+  environment:
+    DOMAIN: pablovoorvaart.me
+
+functions:
+  recive:
+    handler: src/recive.recive
+    iamRoleStatements:
+        - Effect: "Allow"
+          Action:
+            - s3:ListObjects
+            - s3:PutObject
+          Resource:
+            - !Join ['', ['arn:aws:s3:::', "${self:provider.environment.DOMAIN}", '/mail/*']]
+
+resources:
+    - ${file(resources/s3.yml)}
+    - ${file(resources/cognito-user-pool.yml)}
+    - ${file(resources/cognito-identity-pool.yml)}

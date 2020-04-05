@@ -51,7 +51,7 @@ def recive(event, context):
             if recipientName in CurrentDomainUsers:
                 s3.put_object(
                     Bucket = domain,
-                    Key = 'mail/%s/%s/%s' % (recipientName, folder, str(uuid.uuid4)),
+                    Key = 'mail/%s/%s/%s' % (recipientName, folder, str(uuid.uuid4())),
                     Body = json.dumps(event)
                 )
             else:

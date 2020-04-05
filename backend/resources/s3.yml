@@ -1,0 +1,25 @@
+Resources:
+    HostingBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          AccessControl: PublicRead
+          BucketName: ${self:provider.environment.DOMAIN}
+          MetricsConfigurations: 
+            - Id: EntireBucket
+          WebsiteConfiguration:
+            IndexDocument: index.html
+            ErrorDocument: error.html
+    HostingBucketPolicy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+            Bucket: !Ref HostingBucket
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal: "*"
+                      Action: s3:GetObject
+                      Resource: !Join ['', ['arn:aws:s3:::', !Ref HostingBucket, '/*']] 
+                    - Effect: Deny
+                      Principal: "*"
+                      Action: s3:GetObject
+                      Resource : !Join ['', ['arn:aws:s3:::', !Ref HostingBucket, '/mail/*']]
