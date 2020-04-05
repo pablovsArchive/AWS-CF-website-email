@@ -24,3 +24,6 @@ node_modules/
 
 # Serverless directories
 .serverless
+
+# Dev
+src/config.js
