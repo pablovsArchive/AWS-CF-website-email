@@ -28,11 +28,16 @@ Resources:
         Properties:
           Bucket: !Ref HostingBucket
           PolicyDocument:
-              Statement:
-                  Effect: Allow
-                  Principal: "*"
-                  Action: s3:GetObject
-                  Resource: !Join ['', ['arn:aws:s3:::', !Ref HostingBucket, '/*']] 
+            Statement:
+                Effect: Allow
+                Principal: "*"
+                Action: s3:GetObject
+                Resource: !Join ['', ['arn:aws:s3:::', !Ref HostingBucket, '/*']] 
+            Statement:
+                Effect: Deny
+                Principal: "*"
+                Action: s3:GetObject
+                Resource : !Join ['', ['arn:aws:s3:::', !Ref HostingBucket, '/mail/*']]
     HostingBucketRecord:
         Type: AWS::Route53::RecordSet
         Properties:
@@ -43,21 +48,3 @@ Resources:
                 DNSName: s3-website-eu-west-1.amazonaws.com.
                 HostedZoneId: !Ref S3HostedZoneId
             
-    MailBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: !Join ['-', ['email', !Ref DomainName]]
-    MailBucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: !Ref MailBucket
-        PolicyDocument:
-            Statement:
-                Effect: Allow
-                Principal:
-                    Service: ses.amazonaws.com
-                Action: s3:PutObject
-                Resource: !Join ['', ['arn:aws:s3:::', !Ref MailBucket, '/*']]
-                Condition:
-                    StringLike:
-                        aws:Referer: !Ref AWS::AccountId
